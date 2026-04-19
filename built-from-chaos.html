@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Built from Chaos</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0a; --bg2: #111111;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.15);
+      --gold: #F5C842; --gold2: #E8B820;
+      --white: #F0EEE8; --white2: #A89F8C; --white3: #5C5750;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body { background: var(--bg); font-family: var(--font); color: var(--white); }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2rem; border-bottom: 0.5px solid var(--border); }
+    .nav-logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
+    .nav-logo-main { font-size: 20px; font-weight: 500; color: var(--gold); letter-spacing: -0.5px; }
+    .nav-logo-sub { font-size: 9px; color: var(--white3); letter-spacing: 3px; text-transform: uppercase; margin-top: 3px; }
+    .nav-links { display: flex; gap: 16px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 12px; color: var(--white2); text-decoration: none; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a.nav-intro { color: var(--gold); font-weight: 500; border: 0.5px solid rgba(245,200,66,0.35); padding: 4px 12px; border-radius: 999px; }
+    .nav-links a.nav-intro:hover { background: rgba(245,200,66,0.08); }
+
+    .ticker { background: var(--gold); padding: 0.6rem 2rem; display: flex; align-items: center; gap: 16px; overflow: hidden; }
+    .ticker-label { font-size: 10px; font-weight: 600; color: #0a0a0a; letter-spacing: 1.5px; white-space: nowrap; }
+    .ticker-sep { color: rgba(0,0,0,0.3); }
+    .ticker-track { overflow: hidden; flex: 1; }
+    .ticker-items { display: flex; gap: 24px; animation: ticker-scroll 24s linear infinite; width: max-content; }
+    .ticker-item { font-size: 12px; color: #1a1a0a; white-space: nowrap; }
+    @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    .inner { padding: 0 2rem; max-width: 1100px; margin: 0 auto; }
+
+    .hero { padding: 3rem 0 2.5rem; border-bottom: 0.5px solid var(--border); margin-bottom: 2rem; }
+    .hero-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+    .hero-eyebrow-line { width: 24px; height: 1px; background: var(--gold); }
+    .hero-eyebrow-text { font-size: 11px; color: var(--gold2); letter-spacing: 2.5px; text-transform: uppercase; }
+    .hero-title { font-size: 44px; font-weight: 500; color: var(--white); line-height: 1.1; letter-spacing: -2px; max-width: 560px; margin-bottom: 0.5rem; }
+    .hero-title em { color: var(--gold); font-style: italic; }
+    .hero-title small { font-size: 16px; font-weight: 400; color: var(--white2); letter-spacing: 0; display: block; margin-top: 0.5rem; font-style: normal; }
+    .hero-sub { font-size: 14px; color: var(--white2); line-height: 1.75; max-width: 440px; margin-top: 1rem; }
+
+    .cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2rem; }
+    .cat { font-size: 12px; padding: 5px 16px; border-radius: 999px; border: 0.5px solid var(--border2); color: var(--white2); cursor: pointer; background: transparent; letter-spacing: 0.3px; transition: all 0.15s; }
+    .cat:hover { border-color: var(--gold); color: var(--gold); }
+    .cat.active { background: var(--gold); color: #0a0a0a; border-color: var(--gold); font-weight: 500; }
+
+    .section-label { font-size: 11px; font-weight: 500; color: var(--white3); margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; letter-spacing: 1px; text-transform: uppercase; }
+    .section-label a { font-size: 12px; color: var(--gold2); cursor: pointer; letter-spacing: 0; text-transform: none; text-decoration: none; }
+    .section-label a:hover { color: var(--gold); }
+    .accent-line { width: 32px; height: 2px; background: var(--gold); margin-bottom: 1.25rem; }
+
+    .card-tag { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 0.85rem; letter-spacing: 0.5px; }
+    .tag-geo    { color: #0a0a0a; background: #F5C842; }
+    .tag-health { color: #0a0a0a; background: #7ED8B0; }
+    .tag-rehab  { color: #0a0a0a; background: #C4A7F5; }
+    .tag-tech   { color: #0a0a0a; background: #7AB8F5; }
+    .tag-econ   { color: #0a0a0a; background: #F5A07A; }
+    .tag-hist   { color: #0a0a0a; background: #F5C8A0; }
+
+    .card-title   { font-size: 20px; font-weight: 500; color: var(--white); line-height: 1.35; margin-bottom: 0.75rem; letter-spacing: -0.3px; }
+    .card-excerpt { font-size: 13px; color: var(--white2); line-height: 1.75; margin-bottom: 1.25rem; }
+    .card-meta    { font-size: 11px; color: var(--white3); display: flex; gap: 12px; }
+
+    .featured { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1rem; margin-bottom: 2.5rem; }
+    .card-main { background: var(--bg2); border-radius: 12px; padding: 2rem; border: 0.5px solid var(--border); cursor: pointer; transition: border-color 0.15s; }
+    .card-main:hover { border-color: var(--border2); }
+    .side-cards { display: flex; flex-direction: column; gap: 0.75rem; }
+    .card-sm { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+    .card-sm:hover { border-color: var(--border2); }
+    .card-sm .card-title { font-size: 14px; margin-bottom: 0.4rem; }
+    .card-sm .card-meta  { margin-top: 0.75rem; }
+
+    .duo-featured { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem; }
+    .card-duo-main { background: var(--bg2); border-radius: 12px; padding: 1.75rem; border: 0.5px solid var(--border); cursor: pointer; grid-column: span 2; transition: border-color 0.15s; }
+    .card-duo-main.rehab { border-color: rgba(196,167,245,0.2); }
+    .card-duo-main.rehab:hover { border-color: rgba(196,167,245,0.4); }
+    .card-duo-main.econ  { border-color: rgba(245,160,122,0.2); }
+    .card-duo-main.econ:hover  { border-color: rgba(245,160,122,0.4); }
+    .card-duo-main.hist  { border-color: rgba(245,200,160,0.2); }
+    .card-duo-main.hist:hover  { border-color: rgba(245,200,160,0.4); }
+    .card-duo-side { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.15s; }
+    .card-duo-side:hover { border-color: var(--border2); }
+    .card-duo-side .card-title { font-size: 14px; margin-bottom: 0.5rem; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 2.5rem; }
+    .card-grid { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+    .card-grid:hover { border-color: var(--border2); }
+    .card-grid .card-title   { font-size: 14px; margin-bottom: 0.4rem; }
+    .card-grid .card-excerpt { font-size: 12px; margin-bottom: 0; }
+    .card-grid .card-meta    { margin-top: 0.75rem; }
+
+    footer { border-top: 0.5px solid var(--border); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+    .footer-logo { font-size: 14px; color: var(--gold); font-weight: 500; }
+    .footer-copy { font-size: 12px; color: var(--white3); margin-top: 3px; }
+    .footer-links a { font-size: 12px; color: var(--gold2); text-decoration: none; margin-left: 14px; }
+    .footer-links a:hover { color: var(--gold); }
+
+    @media (max-width: 720px) {
+      .featured, .duo-featured { grid-template-columns: 1fr; }
+      .card-duo-main { grid-column: span 1; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero-title { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="#">
+      <span class="nav-logo-main">Built from Chaos</span>
+      <span class="nav-logo-sub">insight &amp; analysis</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" class="nav-intro">소개</a></li>
+      <li><a href="#">재활트레이닝</a></li>
+      <li><a href="#">건강·웰니스</a></li>
+      <li><a href="#">경제·투자</a></li>
+      <li><a href="#">지정학</a></li>
+      <li><a href="#">테크·AI</a></li>
+      <li><a href="#">역사</a></li>
+    </ul>
+  </nav>
+
+  <div class="ticker">
+    <span class="ticker-label">LIVE</span>
+    <span class="ticker-sep">|</span>
+    <div class="ticker-track">
+      <div class="ticker-items">
+        <span class="ticker-item">미국-이란 핵 협상 3라운드 돌입</span>
+        <span class="ticker-item">·</span>
+        <span class="ticker-item">Fed 금리 동결, 시장 반응 엇갈려</span>
+        <span class="ticker-item">·</span>
+        <span class="ticker-item">레바논 휴전 협정 90일째 유지 중</span>
+        <span class="ticker-item">·</span>
+        <span class="ticker-item">장내 미생물 연구, 네이처 표지 장식</span>
+        <span class="ticker-item">·</span>
+        <span class="ticker-item">미국-이란 핵 협상 3라운드 돌입</span>
+        <span class="ticker-item">·</span>
+        <span class="ticker-item">Fed 금리 동결, 시장 반응 엇갈려</span>
+        <span class="ticker-item">·</span>
+        <span class="ticker-item">레바논 휴전 협정 90일째 유지 중</span>
+        <span class="ticker-item">·</span>
+        <span class="ticker-item">장내 미생물 연구, 네이처 표지 장식</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="inner">
+
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <span class="hero-eyebrow-text">Built from Chaos</span>
+      </div>
+      <h1 class="hero-title">
+        혼돈 속에서<br>
+        <em>질서를 찾다</em>
+        <small>세상을 이해하는 깊이 있는 시선</small>
+      </h1>
+      <p class="hero-sub">재활, 건강, 경제·투자, 지정학, 테크, 역사까지 — 복잡한 세상을 꿰뚫는 분석과 날카로운 인사이트를 전합니다.</p>
+    </section>
+
+    <div class="cats">
+      <button class="cat active" onclick="setActive(this)">전체</button>
+      <button class="cat" onclick="setActive(this)">재활트레이닝</button>
+      <button class="cat" onclick="setActive(this)">건강·웰니스</button>
+      <button class="cat" onclick="setActive(this)">경제·투자</button>
+      <button class="cat" onclick="setActive(this)">지정학</button>
+      <button class="cat" onclick="setActive(this)">테크·AI</button>
+      <button class="cat" onclick="setActive(this)">역사</button>
+    </div>
+
+    <div class="section-label">추천글 <a href="#">전체보기 →</a></div>
+    <div class="accent-line"></div>
+
+    <div class="featured">
+      <div class="card-main">
+        <span class="card-tag tag-rehab">재활트레이닝</span>
+        <h2 class="card-title">부상에서 복귀까지 — 과학적 재활의 5단계 원칙</h2>
+        <p class="card-excerpt">급성 부상 직후부터 스포츠 복귀까지, 물리치료와 운동과학이 합의한 단계별 재활 프로토콜. 통증 관리, 가동성 회복, 근력 재건, 신경계 재교육의 전 과정.</p>
+        <div class="card-meta"><span>2025년 4월 18일</span><span>10분 읽기</span></div>
+      </div>
+      <div class="side-cards">
+        <div class="card-sm">
+          <span class="card-tag tag-econ">경제·투자</span>
+          <h3 class="card-title">금리 인하 사이클, 어떤 자산에 올라타야 하나</h3>
+          <div class="card-meta"><span>4월 17일</span><span>6분</span></div>
+        </div>
+        <div class="card-sm">
+          <span class="card-tag tag-hist">역사</span>
+          <h3 class="card-title">냉전의 기원 — 얄타회담이 세계를 어떻게 갈랐나</h3>
+          <div class="card-meta"><span>4월 16일</span><span>7분</span></div>
+        </div>
+        <div class="card-sm">
+          <span class="card-tag tag-geo">지정학</span>
+          <h3 class="card-title">미국-이란 갈등의 미래 시나리오</h3>
+          <div class="card-meta"><span>4월 15일</span><span>8분</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 재활트레이닝 -->
+    <div class="section-label">재활트레이닝 <a href="#">더보기 →</a></div>
+    <div class="duo-featured">
+      <div class="card-duo-main rehab">
+        <span class="card-tag tag-rehab">재활트레이닝</span>
+        <h2 class="card-title">부상에서 복귀까지 — 과학적 재활의 5단계 원칙</h2>
+        <p class="card-excerpt">급성 부상 직후부터 스포츠 복귀까지, 물리치료와 운동과학이 합의한 단계별 재활 프로토콜. 통증 관리, 가동성 회복, 근력 재건, 신경계 재교육, 퍼포먼스 복귀의 전 과정을 다룬다.</p>
+        <div class="card-meta"><span>2025년 4월 15일</span><span>10분 읽기</span></div>
+      </div>
+      <div class="card-duo-side">
+        <div>
+          <span class="card-tag tag-rehab">재활트레이닝</span>
+          <h3 class="card-title">회전근개 손상, 수술 없이 나을 수 있을까?</h3>
+        </div>
+        <div class="card-meta"><span>4월 13일</span><span>5분</span></div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card-grid">
+        <span class="card-tag tag-rehab">재활트레이닝</span>
+        <h3 class="card-title">무릎 수술 후 12주 재활 프로토콜</h3>
+        <p class="card-excerpt">ACL·반월판 수술 후 단계별 운동 처방 완전판</p>
+        <div class="card-meta"><span>4월 17일</span><span>6분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-rehab">재활트레이닝</span>
+        <h3 class="card-title">허리 디스크와 운동 — 무엇을 해야 하고 무엇을 피해야 하나</h3>
+        <p class="card-excerpt">통증을 악화시키는 동작 vs 회복을 앞당기는 운동</p>
+        <div class="card-meta"><span>4월 11일</span><span>7분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-rehab">재활트레이닝</span>
+        <h3 class="card-title">발목 염좌 후 고유감각 훈련이 중요한 이유</h3>
+        <p class="card-excerpt">재부상을 막는 신경계 재교육과 밸런스 트레이닝</p>
+        <div class="card-meta"><span>4월 9일</span><span>5분</span></div>
+      </div>
+    </div>
+
+    <!-- 건강·웰니스 -->
+    <div class="section-label">건강·웰니스 <a href="#">더보기 →</a></div>
+    <div class="grid-3">
+      <div class="card-grid">
+        <span class="card-tag tag-health">건강</span>
+        <h3 class="card-title">간헐적 단식이 실제로 효과 있을까?</h3>
+        <p class="card-excerpt">최신 연구 결과로 보는 진실과 오해</p>
+        <div class="card-meta"><span>4월 5일</span><span>5분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-health">건강</span>
+        <h3 class="card-title">수면 최적화 완전 가이드</h3>
+        <p class="card-excerpt">멜라토닌, 수면 사이클, 빛 노출의 과학</p>
+        <div class="card-meta"><span>4월 3일</span><span>6분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-health">건강</span>
+        <h3 class="card-title">장수의 열쇠, 장내 미생물군과 노화의 관계</h3>
+        <p class="card-excerpt">최신 마이크로바이옴 연구가 밝혀낸 노화의 비밀</p>
+        <div class="card-meta"><span>4월 1일</span><span>5분</span></div>
+      </div>
+    </div>
+
+    <!-- 경제·투자 -->
+    <div class="section-label">경제·투자 <a href="#">더보기 →</a></div>
+    <div class="duo-featured">
+      <div class="card-duo-main econ">
+        <span class="card-tag tag-econ">경제·투자</span>
+        <h2 class="card-title">2025 글로벌 매크로 전망 — 지정학 리스크와 자산 배분 전략</h2>
+        <p class="card-excerpt">미중 갈등, 중동 불안, 유럽 침체 속에서 어떤 자산 클래스가 살아남는가. 달러 패권의 균열, 원자재 슈퍼사이클, 신흥국 채권까지 — 불확실성 시대의 포트폴리오 설계법을 다룬다.</p>
+        <div class="card-meta"><span>2025년 4월 18일</span><span>12분 읽기</span></div>
+      </div>
+      <div class="card-duo-side">
+        <div>
+          <span class="card-tag tag-econ">경제·투자</span>
+          <h3 class="card-title">워런 버핏이 현금을 쌓는 진짜 이유</h3>
+        </div>
+        <div class="card-meta"><span>4월 14일</span><span>5분</span></div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card-grid">
+        <span class="card-tag tag-econ">경제·투자</span>
+        <h3 class="card-title">금리 인하 사이클, 어떤 자산에 올라타야 하나</h3>
+        <p class="card-excerpt">역사적 데이터로 본 금리 하락기의 승자와 패자</p>
+        <div class="card-meta"><span>4월 16일</span><span>6분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-econ">경제·투자</span>
+        <h3 class="card-title">ETF vs 개별주, 2025년엔 무엇이 유리한가</h3>
+        <p class="card-excerpt">변동성 장세에서 분산투자 전략의 실제 효과</p>
+        <div class="card-meta"><span>4월 12일</span><span>7분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-econ">경제·투자</span>
+        <h3 class="card-title">달러 패권의 균열, 탈달러화는 현실인가</h3>
+        <p class="card-excerpt">BRICS 통화 논의와 글로벌 기축통화 지형의 변화</p>
+        <div class="card-meta"><span>4월 8일</span><span>6분</span></div>
+      </div>
+    </div>
+
+    <!-- 지정학 -->
+    <div class="section-label">지정학 <a href="#">더보기 →</a></div>
+    <div class="grid-3">
+      <div class="card-grid">
+        <span class="card-tag tag-geo">지정학</span>
+        <h3 class="card-title">미국-이란 갈등의 미래 시나리오</h3>
+        <p class="card-excerpt">전쟁인가 협상인가 — 이언 브레머의 중동 분석</p>
+        <div class="card-meta"><span>4월 18일</span><span>8분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-geo">지정학</span>
+        <h3 class="card-title">G2 시대의 종말, 다극화 세계의 서막</h3>
+        <p class="card-excerpt">미중 패권 경쟁 이후 세계 질서 재편의 시나리오</p>
+        <div class="card-meta"><span>4월 4일</span><span>7분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-geo">지정학</span>
+        <h3 class="card-title">반도체 전쟁, 지정학의 새로운 전선</h3>
+        <p class="card-excerpt">칩 공급망이 국가 안보 핵심 자산이 된 이유</p>
+        <div class="card-meta"><span>4월 2일</span><span>6분</span></div>
+      </div>
+    </div>
+
+    <!-- 테크·AI -->
+    <div class="section-label">테크·AI <a href="#">더보기 →</a></div>
+    <div class="grid-3">
+      <div class="card-grid">
+        <span class="card-tag tag-tech">테크·AI</span>
+        <h3 class="card-title">LLM 컨텍스트 윈도우의 모든 것</h3>
+        <p class="card-excerpt">토큰, WAT 프레임워크, claude.md 구조까지 심층 해설</p>
+        <div class="card-meta"><span>4월 10일</span><span>7분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-tech">테크·AI</span>
+        <h3 class="card-title">NotebookLM으로 대형 프레젠테이션 만들기</h3>
+        <p class="card-excerpt">80슬라이드 자동화 워크플로우 완전 가이드</p>
+        <div class="card-meta"><span>4월 8일</span><span>6분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-tech">테크·AI</span>
+        <h3 class="card-title">Claude Code와 Remotion: AI 영상 자동화의 현재</h3>
+        <p class="card-excerpt">스크립트→영상 자동화 워크플로우 완전 분석</p>
+        <div class="card-meta"><span>4월 6일</span><span>6분</span></div>
+      </div>
+    </div>
+
+    <!-- 역사 -->
+    <div class="section-label">역사 <a href="#">더보기 →</a></div>
+    <div class="duo-featured">
+      <div class="card-duo-main hist">
+        <span class="card-tag tag-hist">역사</span>
+        <h2 class="card-title">냉전의 기원 — 얄타회담이 세계를 어떻게 갈랐나</h2>
+        <p class="card-excerpt">1945년 얄타의 밀실에서 루스벨트, 처칠, 스탈린이 그은 선 하나가 이후 50년 세계 질서를 결정했다. 강대국 협상의 논리와 그 유산을 깊이 있게 추적한다.</p>
+        <div class="card-meta"><span>2025년 4월 16일</span><span>11분 읽기</span></div>
+      </div>
+      <div class="card-duo-side">
+        <div>
+          <span class="card-tag tag-hist">역사</span>
+          <h3 class="card-title">로마 제국은 왜 무너졌는가 — 쇠락의 복합 방정식</h3>
+        </div>
+        <div class="card-meta"><span>4월 10일</span><span>8분</span></div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card-grid">
+        <span class="card-tag tag-hist">역사</span>
+        <h3 class="card-title">조선의 개항, 선택이었나 강요였나</h3>
+        <p class="card-excerpt">1876년 강화도조약이 만들어진 구조적 맥락</p>
+        <div class="card-meta"><span>4월 14일</span><span>7분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-hist">역사</span>
+        <h3 class="card-title">석유가 세계를 지배하게 된 100년의 역사</h3>
+        <p class="card-excerpt">록펠러에서 OPEC까지, 에너지 패권의 탄생</p>
+        <div class="card-meta"><span>4월 11일</span><span>9분</span></div>
+      </div>
+      <div class="card-grid">
+        <span class="card-tag tag-hist">역사</span>
+        <h3 class="card-title">1929년 대공황이 지금 우리에게 주는 교훈</h3>
+        <p class="card-excerpt">경제 위기의 패턴과 현대 금융 시스템의 취약성</p>
+        <div class="card-meta"><span>4월 7일</span><span>8분</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Built from Chaos</div>
+      <div class="footer-copy">© 2025. 모든 권리 보유.</div>
+    </div>
+    <div class="footer-links">
+      <a href="#">뉴스레터 구독</a>
+      <a href="#">소개</a>
+      <a href="#">문의</a>
+    </div>
+  </footer>
+
+  <script>
+    function setActive(el) {
+      document.querySelectorAll('.cat').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
